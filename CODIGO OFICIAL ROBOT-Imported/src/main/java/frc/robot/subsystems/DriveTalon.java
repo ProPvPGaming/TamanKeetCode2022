@@ -9,6 +9,9 @@ import frc.robot.Robot;
 
 
 public class DriveTalon {
+double Xposition;
+double Ypostition;
+
     TalonSRX Tdr1 = new TalonSRX(9);
     TalonSRX Tdr2 = new TalonSRX(11);
     TalonSRX Tdl1 = new TalonSRX(12);
@@ -17,14 +20,23 @@ public class DriveTalon {
     SlewRateLimiter LeftJoystick;
     SlewRateLimiter RightJoystick;
 
+    
+
     public void DriveTrainTank(){
 
         LeftJoystick = new SlewRateLimiter(1.75);
         RightJoystick = new SlewRateLimiter(1.75);
+double drive = Robot.control.readPS4Axis(Constantes.XB_LJ_Y);
+double turn = Robot.control.readPS4Axis(Constantes.XB_RJ_X);
 
-        Tdr1.set(ControlMode.PercentOutput, (Robot.control.readPS4Axis(Constantes.XB_RJ_Y)));
-        Tdr2.set(ControlMode.PercentOutput, (Robot.control.readPS4Axis(Constantes.XB_RJ_Y)));
-        Tdl1.set(ControlMode.PercentOutput, -(Robot.control.readPS4Axis(Constantes.XB_LJ_Y)));
-        Tdl2.set(ControlMode.PercentOutput, -(Robot.control.readPS4Axis(Constantes.XB_LJ_Y)));
+
+        double leftDrive = drive - turn;
+        double rightDrive = drive + turn;
+
+        Tdr1.set(ControlMode.PercentOutput,  rightDrive);
+        Tdr2.set(ControlMode.PercentOutput,  rightDrive);
+        Tdl1.set(ControlMode.PercentOutput, - leftDrive);
+        Tdl2.set(ControlMode.PercentOutput, - leftDrive);
     }
+
 }

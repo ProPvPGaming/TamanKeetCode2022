@@ -5,19 +5,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import frc.robot.hardware.Controles;
-
 import frc.robot.subsystems.*;
+import edu.wpi.first.wpilibj.Timer;
 
 public class Robot extends TimedRobot {
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
 
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
 
   public static Controles control;
   public static DriveTalon dTrain;
@@ -25,24 +19,31 @@ public class Robot extends TimedRobot {
   public static Turret turret;
   public static Cameraselect cameras;
   public static Hopper hopper;
-  public static PnuematicArm Pne;
+ // public static PnuematicArm Pne;
+  public static Bishop bishop;
+  public static SparkTest spark;
+  public static SparkDrive SparkDT;
+  public static DriveTalon talonDT;
 
   @Override// :)
   public void robotInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
-    
     dTrain = new DriveTalon();
-  Pne = new PnuematicArm();
+  //Pne = new PnuematicArm();
     control = new Controles();
     intake = new Intake();
     turret = new Turret();
    cameras = new Cameraselect();
    hopper = new Hopper();
+   spark = new SparkTest();
+   SparkDT = new SparkDrive();
+   talonDT = new DriveTalon();
+
+  
+
+
 
    cameras.CameraSetup();
-   Pne.PSet();
+   //Pne.PSet();
   }
 
   /**
@@ -55,6 +56,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    
   }
 
 
@@ -70,15 +72,24 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
 
-    m_autoSelected = m_chooser.getSelected();
-    // cosas de if selected has esto con nombres de cosas, si esta dentro de un loop
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
   }
 
   @Override
 
   public void autonomousPeriodic() {
+double current = Timer.getFPGATimestamp();
+if(current < 2){
+  SparkDT.DriveL1.set(-0.5);
+  SparkDT.DriveL2.set(0.5);
+  SparkDT.DriveR1.set(0.5);
+  SparkDT.DriveR2.set(0.5);
+}
+else{
+  SparkDT.DriveL1.set(0);
+  SparkDT.DriveL2.set(0);
+  SparkDT.DriveR1.set(0);
+  SparkDT.DriveR2.set(0);
+}
   }
 
   
@@ -93,10 +104,11 @@ public class Robot extends TimedRobot {
     //Aqui el codigo donde vamos a poner toda la estructura del robot
     intake.IntakeTest();
     turret.turret();
-    dTrain.DriveTrainTank();
     hopper.HopperTest();
-    Pne.Control();
-
+    spark.climb();
+    SparkDT.drive();
+    //Pne.Control();
+talonDT.DriveTrainTank();
   
 
   }

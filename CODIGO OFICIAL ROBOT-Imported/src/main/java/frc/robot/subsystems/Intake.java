@@ -9,10 +9,16 @@ public class Intake {
     TalonSRX testTalon = new TalonSRX(8);
 public void IntakeTest(){
 
-    if (Robot.control.readPS4Buttons(Constantes.XB_B_X)){
+    if (Robot.control.readJoystickButtons(Constantes.LG_B5)){
+        testTalon.set(ControlMode.PercentOutput, -0.25);
+    }
+    else if(Robot.control.readJoystickButtons(Constantes.LG_B6)){
         testTalon.set(ControlMode.PercentOutput, 0.25);
     }
-    else if(Robot.control.readPS4Buttons(Constantes.XB_B_B)){
+    else if(Robot.control.readJoystickButtons(Constantes.LG_B7)){
+        testTalon.set(ControlMode.PercentOutput, -0.25);
+    }
+    else if(Robot.control.readPS4Buttons(8)){
         testTalon.set(ControlMode.PercentOutput, -0.25);
     }
     else{
